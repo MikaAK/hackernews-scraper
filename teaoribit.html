@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href='http://fonts.googleapis.com/css?family=PT+Mono' rel='stylesheet' type='text/css'>
+<meta name='viewport' content='width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link href="/static/assets/icon-144x144.png" sizes="144x144" rel="apple-touch-icon">
+<link href="/static/assets/splash-1024x1024.png" rel="apple-touch-startup-image">
+<link rel='shortcut icon' href='/static/assets/favicon.png' type='image/x-icon'>
+<title>tea orbit</title>
+<link rel='stylesheet' href='/static/styles/teaorbit.css' type='text/css'>
+
+<link rel='stylesheet' href='/static/styles/icons.css' type='text/css'>
+<script type='text/javascript' src='/static/scripts/libs/scrollfix.js'></script>
+<script type='text/javascript' src='/static/scripts/libs/jquery.teaorbit.min.js'></script>
+<script type='text/javascript' src='/static/scripts/libs/jquery.cookie.js'></script>
+<script type='text/javascript' src='/static/scripts/libs/jquery.linkify.min.js'></script>
+<script type='text/javascript' src='/static/scripts/libs/jquery.timeago.min.js'></script>
+<script type='text/javascript' src='/static/scripts/libs/jquery.autosize.min.js'></script>
+<script type='text/javascript' src='/static/scripts/libs/modernizr.min.js'></script>
+<script type='text/javascript' src='/static/scripts/libs/sockjs.min.js'></script>
+<script type='text/javascript' src='/static/scripts/basics.js'></script>
+<script type='text/javascript' src='/static/scripts/ui.js'></script>
+<script type='text/javascript' src='/static/scripts/network.js'></script>
+<script type='text/javascript' src='/static/scripts/draw.js'></script>
+<script type='text/javascript'>
+window.static_url = '/static/';
+window.networking = null;
+window.ui = null;
+window.title = "tea orbit";
+window.last_spiel_date = 0;
+window.latitude = null;
+window.longitude = null;
+window.gps_accuracy = null;
+
+window.chatroom = 'lighthouse-june';
+window.title = "#" + window.chatroom;
+document.title = window.title;
+$(document).ready(function() {
+$('img.map').hide();
+$('.contextual-info').html('You are seeing messages from anyone who opened teaorbit.com/lighthouse-june');
+$('#show-hide-details').html('#'+window.chatroom);
+});
+
+$(document).ready(function(){
+$(window).bind('touchmove', function(e){
+e.preventDefault();
+});
+$("#chat").bind('touchmove', function(e){
+e.stopPropagation();
+});
+if($.browser.mobile == false) {
+$('#type-here').focus();
+$('body').on('click', function(e){
+if(!$(e.target).is('input') && !$(e.target).is('textarea')) {
+$('#type-here').focus();
+}
+});
+} else {
+$('#type-here, #name').focus(function(e){
+window.ui.scroll();
+});
+}
+if(window.navigator.standalone) {
+$('#header').css('padding-top', '24px');
+$('body').on('click', 'a', function(e){
+var hostname = $(this)[0].hostname
+console.log(hostname);
+if($.inArray(hostname, ['teaorbit.com', 'www.teaorbit.com', 'safinaz.local']) != -1) {
+e.preventDefault();
+document.location = $(this).attr('href');
+}
+});
+}
+window.ui = new UI();
+
+window.ui.init_web_only_features();
+
+window.ui.init();
+new ScrollFix($('#chat')[0]);
+});
+</script>
+</head>
+<body>
+<div id='container'>
+<div id='header'>
+<a id='show-map' href='#' class='button'><span id='show-hide-details'>nearby</span><img class='map desaturate' align='middle' /></a>
+<div class='info' id='num-online'>? online</div>
+<span id='audio'></span>
+<h1 id='logo'><a href='/'><img src='/static/assets/tea-white.png' /><span>tea orbit</span></a></h1>
+</div>
+<div id='chat'>
+<div class='inner'>
+</div>
+</div>
+<div id='channels'>
+<a href='#' class='toggle'></a>
+<div class='inner'>
+</div>
+</div>
+<div id='post'>
+<div class='inner'>
+<form action='/post'>
+<input type='text' name='name' id='name' placeholder='Name (optional)' />
+<input type='hidden' name='latitude' value='0' />
+<input type='hidden' name='longitude' value='0' />
+<input type='hidden' name='last_id' value='0' />
+<input type='hidden' name='session' value='' />
+<input type='hidden' name='chatroom' value='' />
+<textarea name='spiel' id='type-here' placeholder='Type your message'></textarea>
+<button type='submit' class='submit' id='submit' />Submit</button>
+</form>
+<!--<canvas id='drawing' width="500" height="300"></canvas>-->
+</div>
+</div>
+</div>
+<div id='loader'>
+<div class='loader-icon'>
+<div class='inner'>
+<div class='logo'>
+</div>
+<div class='title'>
+Getting location...
+</div>
+<div class='details'>
+The front page needs your location<br/>to show you messages from people nearby.
+</div>
+</div>
+</div>
+</div>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-46162095-1', 'teaorbit.com');
+ga('send', 'pageview');
+</script>
+<div id='map-expanded'>
+<div class='contextual-info'>You are seeing messages from the area shown<div>
+<div><img class='map' /></div>
+</div>
+</body>
+</html>
